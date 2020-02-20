@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script
+            crossorigin
+            src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+        ></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            // React Hooks? functional component에서 setState 및 ref 등을 사용할 수 있게 변경된 것
+            const GuGuDan = () => {
+                // const [state, setState] = React.useState(initial value)
+                // 변수자리에 배열쓰고 객체쓰고 하는게 "구조 분해 할당"
+                const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+                const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+                const [value, setValue] = React.useState('');
+                const [result, setResult] = React.useState('');
+                // Hooks는 useRef로 DOM에 접근함
+                const inputRef = React.useRef();
+
+                const onSubmitForm = e => {
+                    e.preventDefault();
+                    if (parseInt(value) === first * second) {
+                        setResult('정답: ' + value);
+                        setFirst(Math.ceil(Math.random() * 9));
+                        setSecond(Math.ceil(Math.random() * 9));
+                        setValue('');
+                        inputRef.current.focus();
+                    } else {
+                        setResult('오답');
+                        setValue('');
+                        inputRef.current.focus();
+                    }
+                };
+
+                const onChangeInput = e => {
+                    setValue(e.target.value);
+                };
+
+                // Hooks는 render되면서 전체가 다시 실행돼서 느려질 수 있음
+                console.log('rendering!');
+                return (
+                    <React.Fragment>
+                        <div>
+                            {first} x {second} ?
+                        </div>
+                        <form onSubmit={onSubmitForm}>
+                            <input value={value} ref={inputRef} onChange={onChangeInput} />
+                            <button>입력!</button>
+                        </form>
+                        <div id="result">{result}</div>
+                    </React.Fragment>
+                );
+            };
+        </script>
+        <script type="text/babel">
+            ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+        </script>
+    </body>
+</html>
